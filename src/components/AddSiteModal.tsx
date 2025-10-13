@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import { CirclePlus } from 'lucide-react';
 import type { LocalSite } from '../types';
+import { useAlert } from '../hooks/useAlertContext';
 
 interface AddSiteModalProps {
   isOpen: boolean;
@@ -14,6 +15,7 @@ const AddSiteModal: React.FC<AddSiteModalProps> = ({ isOpen, onClose, onAdd }) =
   const [path, setPath] = useState('');
   const [description, setDescription] = useState('');
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const { showWarning } = useAlert();
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -29,11 +31,11 @@ const AddSiteModal: React.FC<AddSiteModalProps> = ({ isOpen, onClose, onAdd }) =
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) {
-      alert('Please enter a site name.');
+      showWarning('Please enter a site name.');
       return;
     }
     if (!path.trim()) {
-      alert('Please enter a path.');
+      showWarning('Please enter a path.');
       return;
     }
     onAdd({
