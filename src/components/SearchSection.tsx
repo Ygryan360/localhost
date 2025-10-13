@@ -3,14 +3,16 @@ import React, { useState } from 'react';
 import { SEARCH_ENGINES } from '../constants';
 import { Search } from 'lucide-react';
 import { SearchEngine } from '../types';
+import { useAlert } from '../hooks/useAlertContext';
 
 const SearchSection: React.FC = () => {
   const [query, setQuery] = useState('');
   const [selectedEngine, setSelectedEngine] = useState<SearchEngine>(SearchEngine.Google);
-
+  const { showWarning } = useAlert();
+  
   const handleSearch = () => {
     if (!query.trim()) {
-      alert('Please enter a search term.');
+      showWarning('Please enter a search term.');
       return;
     }
     const engine = SEARCH_ENGINES.find((e) => e.name === selectedEngine);

@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
 
 import { SquareArrowOutUpRight } from 'lucide-react';
+import { useAlert } from '../hooks/useAlertContext';
 
 const CustomPortSection: React.FC = () => {
   const [port, setPort] = useState('');
+  const { showWarning } = useAlert();
 
   const goToCustomPort = () => {
     const portNumber = parseInt(port, 10);
     if (!port.trim()) {
-      alert('Please enter a port number.');
+      showWarning('Please enter a port number.');
       return;
     }
     if (isNaN(portNumber) || portNumber < 1 || portNumber > 65535) {
-      alert('Please enter a valid port number (1-65535).');
+      showWarning('Please enter a valid port number (1-65535).');
       return;
     }
     const url = `http://localhost:${portNumber}`;

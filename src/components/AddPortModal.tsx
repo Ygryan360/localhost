@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import { CirclePlus } from 'lucide-react';
 import type { Port } from '../types';
+import { useAlert } from '../hooks/useAlertContext';
 
 interface AddPortModalProps {
   isOpen: boolean;
@@ -13,6 +14,8 @@ const AddPortModal: React.FC<AddPortModalProps> = ({ isOpen, onClose, onAdd }) =
   const [portNumber, setPortNumber] = useState('');
   const [description, setDescription] = useState('');
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const { showError } = useAlert();
+
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -29,11 +32,11 @@ const AddPortModal: React.FC<AddPortModalProps> = ({ isOpen, onClose, onAdd }) =
     e.preventDefault();
     const num = parseInt(portNumber, 10);
     if (isNaN(num) || num < 1 || num > 65535) {
-      alert('Please enter a valid port number (1-65535).');
+      showError('Please enter a valid port number (1-65535).');
       return;
     }
     if (!description.trim()) {
-      alert('Please enter a description.');
+      showError('Please enter a description.');
       return;
     }
     onAdd({ number: num, description });

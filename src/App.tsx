@@ -17,6 +17,8 @@ import type { Port, LocalSite } from './types';
 import SearchSection from './components/SearchSection';
 import ThemeSwitcher from './components/ThemeSwitcher';
 import { usePortStatus } from './hooks/usePortStatus';
+import { useAlert } from './hooks/useAlertContext';
+
 
 const App: React.FC = () => {
   const [favoritePorts, setFavoritePorts] = useState<Port[]>([]);
@@ -25,6 +27,8 @@ const App: React.FC = () => {
   const [isSiteModalOpen, setIsSiteModalOpen] = useState(false);
 
   const portNumbers = useMemo(() => favoritePorts.map((port) => port.number), [favoritePorts]);
+
+  const { showError } = useAlert();
 
   const { portStatus } = usePortStatus(portNumbers, {
     interval: 30000,
@@ -86,7 +90,7 @@ const App: React.FC = () => {
   const handleAddPort = useCallback(
     (newPort: Omit<Port, 'color'>) => {
       if (favoritePorts.some((p) => p.number === newPort.number)) {
-        alert(`Port ${newPort.number} already exists in your favorites.`);
+        showError(`Port ${newPort.number} already exists in your favorites.`);
         return;
       }
       const colors = [
@@ -106,7 +110,7 @@ const App: React.FC = () => {
       setFavoritePorts((prevPorts) => [...prevPorts, { ...newPort, color: randomColor }]);
       setIsPortModalOpen(false);
     },
-    [favoritePorts]
+    [favoritePorts, showError]
   );
 
   const handleRemovePort = useCallback((portNumber: number) => {
